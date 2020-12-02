@@ -67,6 +67,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       Map<String, dynamic> eventInfo =
                           snapshot.data.documents[index].data();
 
+                      /// Event Info is class in components package go to class
                       EventInfo event = EventInfo.fromMap(eventInfo);
 
                       DateTime startTime = DateTime.fromMillisecondsSinceEpoch(

@@ -26,6 +26,7 @@ class EventInfo {
     @required this.endTimeInEpoch,
   });
 
+  /// create instance of EventInfo and fill from a Map
   EventInfo.fromMap(Map snapshot)
       : id = snapshot['id'] ?? '',
         name = snapshot['name'] ?? '',
@@ -38,6 +39,7 @@ class EventInfo {
         startTimeInEpoch = snapshot['start'],
         endTimeInEpoch = snapshot['end'];
 
+  /// convert EventInfo to Json
   toJson() {
     return {
       'id': id,

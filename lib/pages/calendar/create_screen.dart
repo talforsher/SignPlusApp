@@ -8,6 +8,7 @@ import 'package:sign_plus/components/event_info.dart';
 import 'package:sign_plus/pages/calendar/dashboard_screen.dart';
 import 'package:sign_plus/resources/color.dart';
 import 'package:sign_plus/storage.dart';
+import 'package:sign_plus/utils/UI.dart';
 import 'package:sign_plus/utils/style.dart';
 
 class CreateScreen extends StatefulWidget {
@@ -19,6 +20,7 @@ class _CreateScreenState extends State<CreateScreen> {
   Storage storage = Storage();
   CalendarClient calendarClient = CalendarClient();
 
+  /// textEditing Controllers
   TextEditingController textControllerDate;
   TextEditingController textControllerStartTime;
   TextEditingController textControllerEndTime;
@@ -27,25 +29,30 @@ class _CreateScreenState extends State<CreateScreen> {
   TextEditingController textControllerLocation;
   TextEditingController textControllerAttendee;
 
+  /// focusNodes
   FocusNode textFocusNodeTitle;
   FocusNode textFocusNodeDesc;
   FocusNode textFocusNodeLocation;
   FocusNode textFocusNodeAttendee;
 
+  /// reset all pickers to current
   DateTime selectedDate = DateTime.now();
   DateTime selectedStartTime = DateTime.now();
   DateTime selectedEndTime = DateTime.now();
 
   final NOW = DateTime.now();
 
+  /// Strings to get the textEditors input
   String currentTitle;
   String currentDesc;
   String currentLocation;
   String currentEmail;
   String errorString = '';
   // List<String> attendeeEmails = [];
+
   List<calendar.EventAttendee> attendeeEmails = [];
 
+  /// boolean parameters to maintain editing
   bool isEditingDate = false;
   bool isEditingStartTime = false;
   bool isEditingEndTime = false;
@@ -59,6 +66,10 @@ class _CreateScreenState extends State<CreateScreen> {
 
   bool isDataStorageInProgress = false;
 
+  /**
+   * a method that opens the Date picker at the textEditing Field
+   * @param context - build context
+   * */
   _selectDate(BuildContext context) async {
     final DateTime picked = await DatePicker.showDatePicker(context,
         locale: LocaleType.heb,
@@ -74,6 +85,10 @@ class _CreateScreenState extends State<CreateScreen> {
     }
   }
 
+  /**
+    * a method that opens the timepicker from textediting feild
+    * @param context - build context
+    */
   _selectStartTime(BuildContext context) async {
     final picked =
         await DatePicker.showTimePicker(context, currentTime: DateTime.now());
@@ -90,6 +105,10 @@ class _CreateScreenState extends State<CreateScreen> {
     }
   }
 
+  /**
+   * a method that opens the timepicker from textediting feild
+   * @param context - build context
+   */
   _selectEndTime(BuildContext context) async {
     final picked = await DatePicker.showTimePicker(
       context,
@@ -107,6 +126,11 @@ class _CreateScreenState extends State<CreateScreen> {
     }
   }
 
+/**
+ * a method to validate if title is empty
+ * @param value - the value from textField
+ * return - if empty - 'Title can\'t be empty' else - null
+ * */
   String _validateTitle(String value) {
     if (value != null) {
       value = value?.trim();
@@ -120,31 +144,9 @@ class _CreateScreenState extends State<CreateScreen> {
     return null;
   }
 
-  String _validateEmail(String value) {
-    if (value != null) {
-      value = value.trim();
-
-      if (value.isEmpty) {
-        return 'Can\'t add an empty email';
-      } else {
-        final regex = RegExp(
-            r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
-        final matches = regex.allMatches(value);
-        for (Match match in matches) {
-          if (match.start == 0 && match.end == value.length) {
-            return null;
-          }
-        }
-      }
-    } else {
-      return 'Can\'t add an empty email';
-    }
-
-    return 'Invalid email';
-  }
-
   @override
   void initState() {
+    /// init controllers
     textControllerDate = TextEditingController();
     textControllerStartTime = TextEditingController();
     textControllerEndTime = TextEditingController();
@@ -153,6 +155,7 @@ class _CreateScreenState extends State<CreateScreen> {
     textControllerLocation = TextEditingController();
     textControllerAttendee = TextEditingController();
 
+    /// FocusNodes init
     textFocusNodeTitle = FocusNode();
     textFocusNodeDesc = FocusNode();
     textFocusNodeLocation = FocusNode();
@@ -243,71 +246,78 @@ class _CreateScreenState extends State<CreateScreen> {
                           ? EdgeInsets.symmetric(
                               horizontal: MediaQuery.of(context).size.width / 3)
                           : EdgeInsets.only(left: 10),
-                      child: TextFormField(
-                        textAlign: TextAlign.end,
-                        cursorColor: CustomColor.sea_blue,
-                        controller: textControllerDate,
-                        textCapitalization: TextCapitalization.characters,
-                        onTap: () => _selectDate(context),
-                        readOnly: true,
-                        style: TextStyle(
-                          color: Colors.black87,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 0.5,
-                        ),
-                        decoration: new InputDecoration(
-                          disabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(
-                                color: CustomColor.sea_blue, width: 1),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(
-                                color: CustomColor.sea_blue, width: 1),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(
-                                color: CustomColor.dark_blue, width: 2),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide:
-                                BorderSide(color: Colors.redAccent, width: 2),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                          ),
-                          contentPadding: EdgeInsets.only(
-                            left: 16,
-                            bottom: 16,
-                            top: 16,
-                            right: 16,
-                          ),
-                          hintText: 'דוג: 19 ספטמבר 2020',
-                          hintStyle: TextStyle(
-                            color: Colors.grey.withOpacity(0.6),
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 0.5,
-                          ),
-                          errorText:
-                              isEditingDate && textControllerDate.text != null
-                                  ? textControllerDate.text.isNotEmpty
-                                      ? null
-                                      : 'אנא הזנ/י תאריך'
-                                  : null,
-                          errorStyle: TextStyle(
-                            fontSize: 12,
-                            color: Colors.redAccent,
-                          ),
-                        ),
-                      ),
+                      child: UIDesign.CreateScreenTextField(
+                          textControllerDate,
+                          () async => _selectDate(context),
+                          context,
+                          isEditingDate,
+                          'דוג: 19 ספטמבר 2020',
+                          'אנא הזנ/י תאריך'),
+                      // TextFormField(
+                      //   textAlign: TextAlign.end,
+                      //   cursorColor: CustomColor.sea_blue,
+                      //   controller: textControllerDate,
+                      //   textCapitalization: TextCapitalization.characters,
+                      //   onTap: () => _selectDate(context),
+                      //   readOnly: true,
+                      //   style: TextStyle(
+                      //     color: Colors.black87,
+                      //     fontWeight: FontWeight.bold,
+                      //     letterSpacing: 0.5,
+                      //   ),
+                      //   decoration: new InputDecoration(
+                      //     disabledBorder: OutlineInputBorder(
+                      //       borderRadius:
+                      //           BorderRadius.all(Radius.circular(10.0)),
+                      //       borderSide: BorderSide(
+                      //           color: CustomColor.sea_blue, width: 1),
+                      //     ),
+                      //     enabledBorder: OutlineInputBorder(
+                      //       borderRadius:
+                      //           BorderRadius.all(Radius.circular(10.0)),
+                      //       borderSide: BorderSide(
+                      //           color: CustomColor.sea_blue, width: 1),
+                      //     ),
+                      //     focusedBorder: OutlineInputBorder(
+                      //       borderRadius:
+                      //           BorderRadius.all(Radius.circular(10.0)),
+                      //       borderSide: BorderSide(
+                      //           color: CustomColor.dark_blue, width: 2),
+                      //     ),
+                      //     errorBorder: OutlineInputBorder(
+                      //       borderRadius:
+                      //           BorderRadius.all(Radius.circular(10.0)),
+                      //       borderSide:
+                      //           BorderSide(color: Colors.redAccent, width: 2),
+                      //     ),
+                      //     border: OutlineInputBorder(
+                      //       borderRadius:
+                      //           BorderRadius.all(Radius.circular(10.0)),
+                      //     ),
+                      //     contentPadding: EdgeInsets.only(
+                      //       left: 16,
+                      //       bottom: 16,
+                      //       top: 16,
+                      //       right: 16,
+                      //     ),
+                      //     hintText: 'דוג: 19 ספטמבר 2020',
+                      //     hintStyle: TextStyle(
+                      //       color: Colors.grey.withOpacity(0.6),
+                      //       fontWeight: FontWeight.bold,
+                      //       letterSpacing: 0.5,
+                      //     ),
+                      //     errorText:
+                      //         isEditingDate && textControllerDate.text != null
+                      //             ? textControllerDate.text.isNotEmpty
+                      //                 ? null
+                      //                 : 'אנא הזנ/י תאריך'
+                      //             : null,
+                      //     errorStyle: TextStyle(
+                      //       fontSize: 12,
+                      //       color: Colors.redAccent,
+                      //     ),
+                      //   ),
+                      // ),
                     ),
                     SizedBox(height: 10),
                     RichText(
@@ -1017,6 +1027,8 @@ class _CreateScreenState extends State<CreateScreen> {
                                           'mickykroapps@gmail.com';
 
                                       attendeeEmails.add(eventAttendee);
+
+                                      /// here we insert the event into the calendar
                                       await calendarClient
                                           .insert(
                                               title: currentTitle,
@@ -1031,6 +1043,8 @@ class _CreateScreenState extends State<CreateScreen> {
                                               endTime: DateTime
                                                   .fromMillisecondsSinceEpoch(
                                                       endTimeInEpoch))
+
+                                          /// use the method then to get the eventData that was uploaded to calendar for uploading it to firestore
                                           .then((eventData) async {
                                         String eventId = eventData['id'];
                                         String eventLink = eventData['link'];

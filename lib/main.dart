@@ -46,6 +46,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
+    ///shows main screen for 2 sec and then pushes login screen
     Timer timer = Timer(Duration(seconds: 2), (() {
       setState(() {
         Navigator.pushReplacement(
