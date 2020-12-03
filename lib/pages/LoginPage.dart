@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis_auth/auth_browser.dart' as auth;
 import 'package:googleapis_auth/auth_io.dart';
-import 'package:sign_plus/components/calendar_client.dart';
+import 'package:sign_plus/models/calendar_client.dart';
 import 'package:sign_plus/main.dart';
 import 'package:sign_plus/pages/CallAnswerPage.dart';
 import 'package:sign_plus/pages/calendar/create_screen.dart';
@@ -24,11 +24,12 @@ class _LoginPageState extends State<LoginPage> {
   FirebaseAuth _auth = FirebaseAuth.instance;
 
   /// boolean parameters
+  /// validate checkbox
   bool _deafCheck = false;
   bool _translatorCheck = false;
   bool _validate = true;
 
-  /// textEditing Controllers
+  /// textEditing Controllers Email Password SignIn
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -66,10 +67,11 @@ class _LoginPageState extends State<LoginPage> {
         events.then((showEvents) {
           showEvents.items.forEach((cal.Event ev) {
             print(ev.summary);
+            print(ev.status);
           });
         });
 
-        /// second sign in for connecting to firebase,
+        /// second sign in for connecting to firebase, silently
         final GoogleSignInAccount googleUser = await GoogleSignIn(
                 scopes: ['https://www.googleapis.com/auth/userinfo.email'])
             .signInSilently();
@@ -85,11 +87,15 @@ class _LoginPageState extends State<LoginPage> {
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
         );
+
+        /// sign in to firebase authentication
         final userCredential = await _auth.signInWithCredential(credential);
         final User user = userCredential.user;
         if (user != null) {
           print(user.email);
 
+          /// check which checkbox is signed, and act by it
+          /// see lines: 182-222
           String userKind = _deafCheck
               ? 'deaf'
               : _translatorCheck
@@ -193,6 +199,8 @@ class _LoginPageState extends State<LoginPage> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(25),
                         color: Color(0xffFFFFFF)),
+
+                    /// checkBox "אני מתורגמן"
                     child: CheckboxListTile(
                       title: Text(
                         'אני מתורגמנ/ית ',
@@ -225,9 +233,11 @@ class _LoginPageState extends State<LoginPage> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  /// Google signIn button
                   InkWell(
                     onTap: () {
                       setState(() {
+                        /// check if no checkbox pressed --> make validate false and show error
                         if (!_deafCheck && !_translatorCheck) {
                           _validate = false;
                         } else {

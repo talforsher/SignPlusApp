@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:googleapis/calendar/v3.dart' as calendar;
 import 'package:intl/intl.dart';
-import 'package:sign_plus/components/calendar_client.dart';
-import 'package:sign_plus/components/event_info.dart';
+import 'package:sign_plus/models/calendar_client.dart';
+import 'package:sign_plus/models/event_info.dart';
 import 'package:sign_plus/pages/calendar/dashboard_screen.dart';
 import 'package:sign_plus/resources/color.dart';
-import 'package:sign_plus/storage.dart';
+import 'package:sign_plus/models/storage.dart';
 import 'package:sign_plus/utils/UI.dart';
 import 'package:sign_plus/utils/style.dart';
 
@@ -64,6 +64,7 @@ class _CreateScreenState extends State<CreateScreen> {
   // bool shouldNofityAttendees = false;
   // bool hasConferenceSupport = false;
 
+  /// summary of all boolean parameters
   bool isDataStorageInProgress = false;
 
   /**
@@ -71,13 +72,17 @@ class _CreateScreenState extends State<CreateScreen> {
    * @param context - build context
    * */
   _selectDate(BuildContext context) async {
+    /// save picker as variable for use of picked value
     final DateTime picked = await DatePicker.showDatePicker(context,
         locale: LocaleType.heb,
         minTime: DateTime(2020),
         maxTime: DateTime(2050),
         currentTime: DateTime.now());
 
+    /// if picked is null --> picker wasn't opened
+    /// if picker is same as default --> picker wasnt changed
     if (picked != null && picked != selectedDate) {
+      /// set new state and fill input date with new data
       setState(() {
         selectedDate = picked;
         textControllerDate.text = DateFormat.yMMMMd().format(selectedDate);
@@ -131,6 +136,7 @@ class _CreateScreenState extends State<CreateScreen> {
  * @param value - the value from textField
  * return - if empty - 'Title can\'t be empty' else - null
  * */
+
   String _validateTitle(String value) {
     if (value != null) {
       value = value?.trim();
@@ -1018,11 +1024,13 @@ class _CreateScreenState extends State<CreateScreen> {
                                       'Start Time: ${DateTime.fromMillisecondsSinceEpoch(startTimeInEpoch)}');
                                   print(
                                       'End Time: ${DateTime.fromMillisecondsSinceEpoch(endTimeInEpoch)}');
-
+                                  //Todo: make sure start time is after NOW
                                   if (endTimeInEpoch - startTimeInEpoch > 0) {
                                     if (_validateTitle(currentTitle) == null) {
                                       calendar.EventAttendee eventAttendee =
                                           calendar.EventAttendee();
+
+                                      /// global email
                                       eventAttendee.email =
                                           'mickykroapps@gmail.com';
 

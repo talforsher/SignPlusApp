@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// class for events to firebase and read from firebase
 class EventInfo {
   final String id;
   final String name;
@@ -13,6 +14,7 @@ class EventInfo {
   final int startTimeInEpoch;
   final int endTimeInEpoch;
 
+  /// constructor will require what parameters must EventInfo class have in each instance
   EventInfo({
     @required this.id,
     @required this.name,
@@ -26,7 +28,7 @@ class EventInfo {
     @required this.endTimeInEpoch,
   });
 
-  /// create instance of EventInfo and fill from a Map
+  /// create instance of EventInfo and fill from a Map/dictionary
   EventInfo.fromMap(Map snapshot)
       : id = snapshot['id'] ?? '',
         name = snapshot['name'] ?? '',

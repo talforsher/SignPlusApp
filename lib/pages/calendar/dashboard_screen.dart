@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sign_plus/components/event_info.dart';
+import 'package:sign_plus/models/event_info.dart';
 import 'package:sign_plus/pages/calendar/create_screen.dart';
 import 'package:sign_plus/pages/calendar/edit_screen.dart';
 import 'package:sign_plus/resources/color.dart';
-import 'package:sign_plus/storage.dart';
+import 'package:sign_plus/models/storage.dart';
 import 'package:sign_plus/utils/style.dart';
 import 'package:url_launcher/url_launcher.dart';
 

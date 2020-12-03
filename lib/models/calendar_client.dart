@@ -5,7 +5,7 @@ class CalendarClient {
   static var calendar;
 
   /**
-   * a function to insert an Event to Calendar
+   * a function to add an Event to Calendar
    * @params :
    * title - title of event
    * description -  optional desription of event
@@ -51,11 +51,11 @@ class CalendarClient {
 
     EventDateTime start = new EventDateTime();
     start.dateTime = startTime;
-    start.timeZone = "GMT+05:30";
+    start.timeZone = "GMT+02:00";
     event.start = start;
 
     EventDateTime end = new EventDateTime();
-    end.timeZone = "GMT+05:30";
+    end.timeZone = "GMT+02:00";
     end.dateTime = endTime;
     event.end = end;
 
@@ -66,8 +66,7 @@ class CalendarClient {
       /// insert here refers to the calendar ^ and will insert the event to the calendar connected
       await calendar.events
           .insert(event, calendarId,
-              conferenceDataVersion: hasConferenceSupport ? 1 : 0,
-              sendUpdates: shouldNotifyAttendees ? "all" : "none")
+              conferenceDataVersion: 1, sendUpdates: "all")
           .then((value) {
         print("Event Status: ${value.status}");
         if (value.status == "confirmed") {

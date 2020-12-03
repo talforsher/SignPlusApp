@@ -1,15 +1,7 @@
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:googleapis_auth/auth_io.dart';
-import 'package:sign_plus/components/calendar_client.dart';
-import 'package:sign_plus/pages/CallAnswerPage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sign_plus/pages/LoginPage.dart';
-import 'package:sign_plus/pages/calendar/create_screen.dart';
-import 'package:sign_plus/pages/calendar/dashboard_screen.dart';
-import 'package:sign_plus/pages/calendar/edit_screen.dart';
-import 'package:sign_plus/utils/secrets.dart';
 import 'package:sign_plus/utils/style.dart';
 import 'package:googleapis/calendar/v3.dart' as cal;
 

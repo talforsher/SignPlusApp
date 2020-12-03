@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:googleapis/calendar/v3.dart' as calendar;
 import 'package:intl/intl.dart';
-import 'package:sign_plus/components/calendar_client.dart';
-import 'package:sign_plus/components/event_info.dart';
+import 'package:sign_plus/models/calendar_client.dart';
+import 'package:sign_plus/models/event_info.dart';
 import 'package:sign_plus/resources/color.dart';
-import 'package:sign_plus/storage.dart';
+import 'package:sign_plus/models/storage.dart';
 
 class EditScreen extends StatefulWidget {
   final EventInfo event;
