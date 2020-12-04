@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:sign_plus/components/event_info.dart';
+import 'package:sign_plus/models/event_info.dart';
 
 final CollectionReference mainCollection =
     FirebaseFirestore.instance.collection('event');
