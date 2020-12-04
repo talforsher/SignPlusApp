@@ -72,7 +72,7 @@ class _CreateScreenState extends State<CreateScreen> {
    * */
   _selectDate(BuildContext context) async {
     final DateTime picked = await DatePicker.showDatePicker(context,
-        locale: LocaleType.heb,
+        locale: LocaleType.heb, //there were a bug on my machine to figure ".heb"
         minTime: DateTime(2020),
         maxTime: DateTime(2050),
         currentTime: DateTime.now());
